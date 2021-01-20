@@ -1,0 +1,4 @@
+ffmpeg -i OP_5-100kHz.mp4 -vf "[in] scale=iw/2:ih/2, pad=2*iw:ih [left]; movie=OP_100-250kHz.mp4, scale=iw/2:ih/2 [right]; [left][right] overlay=main_w/2:0 [out]" out.mp4
+
+
+ffmpeg -i OP.mp4 -vf "[in] scale=iw/3:ih/3, pad=3*iw:ih [left]; movie=out.mp4, scale=iw/3*2:ih/3*2 [right]; [left][right] overlay=main_w/3:0 [out]" out2.mp4

@@ -1,0 +1,1 @@
+for f in `ls *.jpg`; do ffmpeg -i $f new_$f -loglevel quiet; done

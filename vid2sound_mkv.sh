@@ -1,0 +1,1 @@
+for f in `ls *.mkv`; do ffmpeg -i $f -f wav ${f%%.mkv}.wav -loglevel quiet; done

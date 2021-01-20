@@ -1,0 +1,1 @@
+for f in `ls *.MP4`; do mkdir ${f%%.MP4}; ffmpeg -i $f -f image2 ${f%%.MP4}/image-%04d.png -loglevel quiet; done
