@@ -16,4 +16,4 @@ else
 fi
 
 
-for f in `ls *.mkv`; do ffmpeg -f s16le -ar $2 -ac $3 -i $f -f wav $outfol/${f%%.bin}.wav -loglevel quiet; done
+for f in `ls *.bin`; do ffmpeg -f s16le -ar $2 -ac $3 -i $f -f wav $outfol/${f%%.bin}.wav -loglevel quiet; done
