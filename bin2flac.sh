@@ -11,6 +11,13 @@
 ## -q -loglevel quiet
 ## -y overwrites flac file if already exist
 
+if [ $# -eq 0 ]
+then
+  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist)]'
+  exit 1
+fi
+
+
 folder=$1
 fs=$2
 ch=$3
