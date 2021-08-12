@@ -5,13 +5,13 @@ if [ $# -eq 0 ]
 then
   echo 'bin2wav.sh [folder_path] [fs] [number_of_channels] [outputfolder]'
 else
-  cd $1
+  cd "$1"
 fi
 
 
 if [ $# -eq 4 ]
 then
-  outfol=$4
+  outfol="$4"
 else
   outfol="$1_wav"
 fi
