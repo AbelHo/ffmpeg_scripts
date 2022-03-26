@@ -21,6 +21,15 @@ fi
 folder="$1"
 fs=$2
 ch=$3
+var_4="$4"
+
+if (( $# > 3 )) && [[ ${var_4:0:1} != "-" ]]
+then
+  outfol="$4"
+  shift 1
+else
+  outfol="$1_flac"
+fi
 
 shift 3
 
@@ -46,12 +55,12 @@ done
 if [ "$r" = remove ]; then
   for f in `ls "$folder*.bin"`; 
     do 
-    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac ${f%%.bin}.flac $y $loglevel && rm "$f"
+    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac "$outfol/${f%%.bin}.flac" $y $loglevel && rm "$f"
   done
 else
   for f in `ls "$folder*.bin"`; 
     do 
-    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac "${f%%.bin}.flac" $y $loglevel
+    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac "$outfol/${f%%.bin}.flac" $y $loglevel
   done
 fi
 
