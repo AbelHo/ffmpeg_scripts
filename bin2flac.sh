@@ -18,7 +18,7 @@ then
 fi
 
 
-folder=$1
+folder="$1"
 fs=$2
 ch=$3
 
@@ -44,14 +44,14 @@ while getopts ":rqy" opt; do
 done
 
 if [ "$r" = remove ]; then
-  for f in `ls $folder*.bin`; 
+  for f in `ls "$folder*.bin"`; 
     do 
-    ffmpeg -f s16le -ar $fs -ac $ch -i $f -c:a flac ${f%%.bin}.flac $y $loglevel && rm $f
+    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac ${f%%.bin}.flac $y $loglevel && rm "$f"
   done
 else
-  for f in `ls $folder*.bin`; 
+  for f in `ls "$folder*.bin"`; 
     do 
-    ffmpeg -f s16le -ar $fs -ac $ch -i $f -c:a flac ${f%%.bin}.flac $y $loglevel
+    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac "${f%%.bin}.flac" $y $loglevel
   done
 fi
 
