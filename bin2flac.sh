@@ -13,7 +13,7 @@
 
 if [ $# -eq 0 ]
 then
-  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist)]'
+  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [outfolder(optional)] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist)]'
   exit 1
 fi
 
@@ -26,6 +26,7 @@ var_4="$4"
 if (( $# > 3 )) && [[ ${var_4:0:1} != "-" ]]
 then
   outfol="$4"
+  mkdir $outfol
   shift 1
 else
   outfol="$1_flac"
@@ -53,14 +54,18 @@ while getopts ":rqy" opt; do
 done
 
 if [ "$r" = remove ]; then
-  for f in `ls "$folder*.bin"`; 
+  for f in `ls "$folder"/*.bin`; 
     do 
-    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac "$outfol/${f%%.bin}.flac" $y $loglevel && rm "$f"
+    outfile="$outfol/${f%%.bin}.flac"
+    outfile=${outfile##*/}
+    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel && rm "$f"
   done
 else
-  for f in `ls "$folder*.bin"`; 
+  for f in `ls "$folder"/*.bin`; 
     do 
-    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac "$outfol/${f%%.bin}.flac" $y $loglevel
+    outfile="$outfol/${f%%.bin}.flac"
+    outfile=${outfile##*/}
+    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel
   done
 fi
 
