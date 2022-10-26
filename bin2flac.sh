@@ -10,10 +10,12 @@
 ## -r to delete bin file after conversion
 ## -q -loglevel quiet
 ## -y overwrites flac file if already exist
+## -f float encoding instead of int16
+## -d .dat instead of .bin
 
 if [ $# -eq 0 ]
 then
-  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [outfolder(optional)] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist)]'
+  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [outfolder(optional)] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist), -f(float encoding), -d(.dat file)]'
   exit 1
 fi
 
@@ -30,6 +32,7 @@ then
   shift 1
 else
   outfol="$1_flac"
+  mkdir $outfol
 fi
 
 shift 3
@@ -37,7 +40,9 @@ shift 3
 r=""
 loglevel=""
 y=""
-while getopts ":rqy" opt; do
+ENCODING=s16le
+filetype=bin
+while getopts ":rqyfd" opt; do
   case $opt in
     r)
       r="remove"
@@ -48,24 +53,31 @@ while getopts ":rqy" opt; do
     y)
       y="-y"
       ;;
+    f)
+      ENCODING=f32be
+      ;;
+    d)
+      filetype=dat
+      echo "**********************************"
+      ;;
     *)
       ;;
   esac
 done
 
 if [ "$r" = remove ]; then
-  for f in `ls "$folder"/*.bin`; 
+  for f in `ls "$folder"/*.$filetype`; 
     do 
-    outfile="$outfol/${f%%.bin}.flac"
+    outfile="$outfol/${f%%.$filetype}.flac"
     outfile=${outfile##*/}
-    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel && rm "$f"
+    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel && rm "$f"
   done
 else
-  for f in `ls "$folder"/*.bin`; 
+  for f in `ls "$folder"/*.$filetype`; 
     do 
-    outfile="$outfol/${f%%.bin}.flac"
+    outfile="$outfol/${f%%.$filetype}.flac"
     outfile=${outfile##*/}
-    ffmpeg -f s16le -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel
+    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel
   done
 fi
 
