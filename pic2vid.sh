@@ -9,9 +9,10 @@ fi
 in_folder=$1
 out_video=$2
 fps=4
+counter="%06d"
 
 shift 2
-while getopts ":r" opt; do
+while getopts ":rc" opt; do
   case $opt in
     r)
     fps=$2
@@ -20,5 +21,5 @@ while getopts ":r" opt; do
   esac
 done
 
-ffmpeg -framerate $fps -i $in_folder/image-%06d.png -vcodec libx264 -b 5m -vf format=yuv420p $out_video
+ffmpeg -framerate $fps -i $in_folder/image-$counter.png -vcodec libx264 -b 5m -vf format=yuv420p $out_video
 
