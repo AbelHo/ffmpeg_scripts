@@ -25,6 +25,7 @@ fs=$2
 ch=$3
 var_4="$4"
 
+# [outfolder(optional)] [metadata config file]
 if (( $# > 3 )) && [[ ${var_4:0:1} != "-" ]]
 then
   outfol="$4"
