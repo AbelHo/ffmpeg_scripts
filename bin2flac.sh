@@ -15,7 +15,7 @@
 
 if [ $# -eq 0 ]
 then
-  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [outfolder(optional)] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist), -f(float encoding), -d(.dat file)]'
+  echo 'bin2flac.sh [folder_path] [fs] [number_of_channels] [outfolder(optional)] [options: -r(delete after convert), -q(quiet logs), -y(overwrite flac if exist), -f(float encoding), -d(.dat file), -w(create .wav file), -h(hide ffmpeg banner)]'
   exit 1
 fi
 
@@ -43,7 +43,9 @@ loglevel=""
 y=""
 ENCODING=s16le
 filetype=bin
-while getopts ":rqyfd" opt; do
+out_type=flac
+hide_banner= 
+while getopts ":rqyfdwh" opt; do
   case $opt in
     r)
       r="remove"
@@ -59,7 +61,15 @@ while getopts ":rqyfd" opt; do
       ;;
     d)
       filetype=dat
-      echo "**********************************"
+      echo "---look for .dat file instead"
+      ;;
+    w)
+      out_type=wav
+      echo "---convert to wav file instead"
+      ;;
+    h)
+      hide_banner=-hide_banner
+      echo "---hide banner"
       ;;
     *)
       ;;
@@ -67,18 +77,18 @@ while getopts ":rqyfd" opt; do
 done
 
 if [ "$r" = remove ]; then
-  for f in `ls "$folder"/*.$filetype`; 
+  for f in ls "$folder"/*.$filetype; 
     do 
-    outfile="$outfol/${f%%.$filetype}.flac"
+    outfile="$outfol/${f%%.$filetype}.$out_type"
     outfile=${outfile##*/}
-    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel && rm "$f"
+    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -f $out_type -c:a pcm_${ENCODING:0:3}le "$outfol/$outfile" $y $loglevel $hide_banner && rm "$f"
   done
 else
-  for f in `ls "$folder"/*.$filetype`; 
-    do 
-    outfile="$outfol/${f%%.$filetype}.flac"
+  for f in ls "$folder"/*.$filetype; 
+    do
+    outfile="$outfol/${f%%.$filetype}.$out_type"
     outfile=${outfile##*/}
-    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -c:a flac $outfol/"$outfile" $y $loglevel
+    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -f $out_type -c:a pcm_${ENCODING:0:3}le "$outfol/$outfile" $y $loglevel $hide_banner
   done
 fi
 
