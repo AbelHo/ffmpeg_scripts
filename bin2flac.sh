@@ -88,7 +88,8 @@ else
     do
     outfile="$outfol/${f%%.$filetype}.$out_type"
     outfile=${outfile##*/}
-    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -f $out_type -c:a pcm_${ENCODING:0:3}le "$outfol/$outfile" $y $loglevel $hide_banner
+    #echo ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -f $out_type -c:a pcm_${ENCODING:0:3}le "$outfol/$outfile" $y $loglevel $hide_banner
+    ffmpeg -f $ENCODING -ar $fs -ac $ch -i "$f" -f $out_type "$outfol/$outfile" $y $loglevel $hide_banner
   done
 fi
 
